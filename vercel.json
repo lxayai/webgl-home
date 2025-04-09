@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "https://www.omom.io",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.omom.io/:path*",
+      "permanent": true
+    }
+  ]
+}
