@@ -1,189 +1,132 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <!-- 保持头部不变 -->
-    <style>
-        /* 保持所有样式不变 */
-    </style>
-</head>
-<body>
-    <div class="cursor"></div>
-    <div class="noise"></div>
-    <div class="grid"></div>
-    
-    <div class="laser-line"></div>
-    
-    <div class="orbs-container">
-        <div class="orb"></div>
-        <div class="orb"></div>
-        <div class="orb"></div>
-    </div>
-    
-    <canvas id="particles" class="particles"></canvas>
-    
-    <div class="content-container">
-        <div class="glitch-container">
-            <h1 class="title" data-text="NEXUS">NEXUS</h1>
-        </div>
-        <p class="subtitle">探索无尽可能</p>
-    </div>
-    
-    <footer class="footer">
-        <a href="mailto:Yolandee@proton.me">CONTACT@NEXUS.IO</a>
-    </footer>
-    
-    <script>
-        // 立即执行的初始化代码 - 不等待DOMContentLoaded
-        // 自定义光标效果
-        const cursor = document.querySelector('.cursor');
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            http-equiv="Cache-Control"
+            content="no-cache" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <title>给钱，五块</title>
+        <meta
+            name="description"
+            content="omom,omom-home,吃碗胡辣汤。" />
+        <meta
+            name="keywords"
+            content="omom,吃碗胡辣汤,wish,webgl" />
+        <meta
+            property="og:url"
+            content="https://github.com/WishMelz/webgl-home/" />
+        <link rel="icon" type="image/x-icon" href="assets/android-chrome-192x192.png">
         
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            
-            // 直接更新为调试
-            console.log("Mouse moved:", e.clientX, e.clientY);
-        });
-        
-        document.addEventListener('mousedown', () => {
-            cursor.classList.add('hover');
-            console.log("Mouse down");
-        });
-        
-        document.addEventListener('mouseup', () => {
-            cursor.classList.remove('hover');
-            console.log("Mouse up");
-        });
-        
-        // 简化版的粒子系统 - 确保基本功能正常
-        const canvas = document.getElementById('particles');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const particleCount = window.innerWidth < 768 ? 50 : 100;
-        let mousePosition = {
-            x: window.innerWidth / 2,
-            y: window.innerHeight / 2
-        };
-        
-        // 调整canvas尺寸
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        
-        // 初始化粒子
-        function initParticles() {
-            resizeCanvas();
-            particles = [];
-            for (let i = 0; i < particleCount; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: Math.random() * 2 + 1,
-                    speedX: Math.random() * 0.5 - 0.25,
-                    speedY: Math.random() * 0.5 - 0.25,
-                    color: `rgba(${Math.round(Math.random() * 100) + 150}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 150) + 100}, ${Math.random() * 0.3 + 0.2})`
-                });
+        <script
+            type="text/javascript"
+            src="assets/dat.gui.min.js"></script>
+        <style>
+            * {
+                user-select: none;
             }
-        }
-        
-        // 绘制和更新粒子
-        function drawParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            particles.forEach(p => {
-                // 更新位置
-                p.x += p.speedX;
-                p.y += p.speedY;
-                
-                // 边界检测
-                if (p.x < 0) p.x = canvas.width;
-                if (p.x > canvas.width) p.x = 0;
-                if (p.y < 0) p.y = canvas.height;
-                if (p.y > canvas.height) p.y = 0;
-                
-                // 鼠标交互
-                const dx = p.x - mousePosition.x;
-                const dy = p.y - mousePosition.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < 100) {
-                    const angle = Math.atan2(dy, dx);
-                    const force = (100 - distance) / 500;
-                    
-                    p.speedX += Math.cos(angle) * force;
-                    p.speedY += Math.sin(angle) * force;
+
+            html,
+            body {
+                overflow: hidden;
+                background-color: #000;
+            }
+
+            body {
+                margin: 0;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+            }
+
+            canvas {
+                width: 100%;
+                height: 100%;
+            }
+            .wrap {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                top: 0;
+                color: #fff;
+                pointer-events: none;
+                text-align: center;
+            }
+            .main {
+                position: absolute;
+                top: 25%;
+                left: 0;
+                right: 0;
+            }
+            h1 {
+                color: #fff;
+                text-align: center;
+                font-family: sans-serif;
+                font-size: 8em;
+                animation: animate 0.5s linear infinite;
+                margin: 0;
+            }
+            footer {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                padding: 20px;
+            }
+            footer a {
+                pointer-events: auto;
+                color: #fff;
+            }
+            footer span {
+                font-size: 12px;
+            }
+            @keyframes animate {
+                0%,
+                100% {
+                    text-shadow: -1.5px -1.5px 0 #0ff, 1.5px 1.5px 0 #f00;
                 }
-                
-                // 绘制粒子
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.fill();
-            });
-            
-            requestAnimationFrame(drawParticles);
-        }
-        
-        // 鼠标移动事件 - 直接绑定，不放在类中
-        document.addEventListener('mousemove', (e) => {
-            mousePosition.x = e.clientX;
-            mousePosition.y = e.clientY;
-            
-            // 标题3D效果
-            const title = document.querySelector('.title');
-            const xAxis = (window.innerWidth / 2 - e.clientX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.clientY) / 25;
-            title.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
-        
-        // 触摸事件
-        document.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                mousePosition.x = e.touches[0].clientX;
-                mousePosition.y = e.touches[0].clientY;
-                
-                const title = document.querySelector('.title');
-                const xAxis = (window.innerWidth / 2 - e.touches[0].clientX) / 25;
-                const yAxis = (window.innerHeight / 2 - e.touches[0].clientY) / 25;
-                title.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+
+                25% {
+                    text-shadow: 1.5px 1.5px 0 #0ff, -1.5px -1.5px 0 #f00;
+                }
+
+                50% {
+                    text-shadow: 1.5px -1.5px 0 #0ff, 1.5px -1.5px 0 #f00;
+                }
+
+                75% {
+                    text-shadow: -1.5px 1.5px 0 #0ff, -1.5px 1.5px 0 #f00;
+                }
             }
-        });
-        
-        // 调整窗口大小
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-        });
-        
-        // 立即初始化和开始动画
-        initParticles();
-        drawParticles();
-        
-        // 扫描线动画效果
-        setInterval(() => {
-            const line = document.querySelector('.laser-line');
-            line.style.top = '0%';
-            line.style.transform = 'scaleX(0)';
-            line.style.opacity = '0';
-            
-            setTimeout(() => {
-                line.style.transition = 'transform 1.5s ease-out, opacity 0.5s ease-in';
-                line.style.transform = 'scaleX(1)';
-                line.style.opacity = '0.6';
-                
-                setTimeout(() => {
-                    line.style.transition = 'top 3s linear, transform 1s ease-in, opacity 1s ease-in';
-                    line.style.top = '100%';
-                    line.style.transform = 'scaleX(0)';
-                    line.style.opacity = '0';
-                }, 1500);
-            }, 100);
-        }, 8000);
-        
-        // 隐藏鼠标
-        if (window.innerWidth > 768) {
-            document.body.style.cursor = 'none';
-        }
-    </script>
-</body>
+            @media screen and (max-width: 767px) {
+                h1 {
+                    font-size: 4.5rem;
+                }
+            }
+        </style>
+        <script>
+            window.ga =
+                window.ga ||
+                function () {
+                    (ga.q = ga.q || []).push(arguments);
+                };
+            ga.l = +new Date();
+            ga("create", "UA-105392568-1", "auto");
+            ga("send", "pageview");
+        </script>
+    </head>
+    <body>
+        <canvas></canvas>
+        <div class="wrap">
+            <div class="main">
+                <h1>OMOM</h1>
+                <h2>吃碗胡辣汤</h2>
+            </div>
+            <footer>        Email: Yolandee@proton.me</footer>
+        </div>
+        <script src="assets/script.js"></script>
+    </body>
 </html>
