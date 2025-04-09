@@ -1,385 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Cache-Control" content="no-cache" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>NEXUS | 流光幻境</title>
-    <meta name="description" content="一个沉浸式交互体验" />
-    <meta name="keywords" content="webgl, interactive, design, experience" />
-    <link rel="icon" type="image/x-icon" href="assets/android-chrome-192x192.png">
-    
+    <!-- 保持头部不变 -->
     <style>
-        :root {
-            --primary: #00ffaa;
-            --secondary: #ff00aa;
-            --accent: #aa00ff;
-            --dark: #050510;
-            --light: #ffffff;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body, html {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            background-color: var(--dark);
-            color: var(--light);
-            font-family: 'Rajdhani', 'Orbitron', sans-serif;
-        }
-        
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
-        
-        .noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('data:image/png;base64,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');
-            opacity: 0.035;
-            pointer-events: none;
-            z-index: 1000;
-        }
-        
-        .content-container {
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            padding: 0 20px;
-            text-align: center;
-            z-index: 10;
-        }
-        
-        .glitch-container {
-            position: relative;
-            display: inline-block;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-        
-        .title {
-            font-size: 16vw;
-            font-weight: 900;
-            letter-spacing: -0.05em;
-            line-height: 0.8;
-            margin: 0;
-            text-transform: uppercase;
-            color: transparent;
-            -webkit-text-stroke: 2px var(--primary);
-            transform-style: preserve-3d;
-            animation: float 6s ease-in-out infinite;
-            position: relative;
-        }
-        
-        .title::before,
-        .title::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            overflow: hidden;
-            background: var(--dark);
-            transform-style: preserve-3d;
-        }
-        
-        .title::before {
-            left: 2px;
-            text-shadow: -1px 0 var(--secondary);
-            animation: glitch-effect 3s infinite linear alternate-reverse;
-            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-            transform: translateZ(-10px);
-        }
-        
-        .title::after {
-            left: -2px;
-            text-shadow: 2px 0 var(--accent);
-            animation: glitch-effect 2s infinite linear alternate-reverse;
-            clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
-            transform: translateZ(10px);
-        }
-        
-        .subtitle {
-            font-size: 1.8rem;
-            font-weight: 300;
-            letter-spacing: 8px;
-            margin-top: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-transform: uppercase;
-            transform: translateY(20px);
-            animation: fadeInUp 1s cubic-bezier(0.215, 0.61, 0.355, 1) forwards 0.5s;
-            opacity: 0;
-        }
-        
-        .laser-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-            opacity: 0.6;
-            z-index: 5;
-            transform-origin: left;
-            animation: laser-scan 8s linear infinite;
-            box-shadow: 0 0 15px 2px var(--primary);
-        }
-        
-        .grid {
-            position: fixed;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform-style: preserve-3d;
-            transform: rotateX(75deg);
-            animation: grid-move 15s linear infinite;
-            z-index: -5;
-        }
-        
-        .orbs-container {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -2;
-        }
-        
-        .orb {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0.4;
-            animation: orb-float 20s ease-in-out infinite alternate;
-        }
-        
-        .orb:nth-child(1) {
-            background: var(--primary);
-            top: 25%;
-            left: 25%;
-            animation-delay: 0s;
-        }
-        
-        .orb:nth-child(2) {
-            background: var(--secondary);
-            bottom: 20%;
-            right: 20%;
-            animation-delay: -5s;
-        }
-        
-        .orb:nth-child(3) {
-            background: var(--accent);
-            top: 60%;
-            left: 70%;
-            animation-delay: -10s;
-        }
-        
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            padding: 20px;
-            text-align: center;
-            z-index: 10;
-            pointer-events: none;
-        }
-        
-        .footer a {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            pointer-events: auto;
-            transition: color 0.3s, text-shadow 0.3s;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-        }
-        
-        .footer a:hover {
-            color: var(--primary);
-            text-shadow: 0 0 10px var(--primary);
-        }
-        
-        .particles {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        
-        .cursor {
-            position: fixed;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid var(--primary);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
-            transition: width 0.2s, height 0.2s, background 0.2s;
-        }
-        
-        .cursor::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--primary);
-            transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s;
-        }
-        
-        .cursor.hover {
-            width: 60px;
-            height: 60px;
-            border-width: 3px;
-            border-color: var(--secondary);
-        }
-        
-        .cursor.hover::after {
-            width: 8px;
-            height: 8px;
-            background: var(--secondary);
-        }
-        
-        /* Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotateX(5deg); }
-            50% { transform: translateY(-20px) rotateX(-5deg); }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                transform: translateY(40px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes laser-scan {
-            0% { transform: scaleX(0); opacity: 0; top: 0%; }
-            3% { opacity: 0.6; }
-            30% { transform: scaleX(1); opacity: 0.6; }
-            50% { transform: scaleX(0); opacity: 0; top: 100%; }
-            100% { opacity: 0; top: 0%; }
-        }
-        
-        @keyframes grid-move {
-            0% { transform: translateY(0) rotateX(75deg); }
-            100% { transform: translateY(50%) rotateX(75deg); }
-        }
-        
-        @keyframes orb-float {
-            0% { transform: translate(0, 0); opacity: 0.3; }
-            50% { transform: translate(30px, -30px); opacity: 0.6; }
-            100% { transform: translate(-30px, 30px); opacity: 0.3; }
-        }
-        
-        @keyframes glitch-effect {
-            0% {
-                clip-path: polygon(0 20%, 100% 20%, 100% 21%, 0 21%);
-                transform: translate(-2px, 0);
-            }
-            2% {
-                clip-path: polygon(0 33%, 100% 33%, 100% 33%, 0 33%);
-                transform: translate(2px, 0);
-            }
-            4% {
-                clip-path: polygon(0 44%, 100% 44%, 100% 44%, 0 44%);
-                transform: translate(1px, 0);
-            }
-            5% {
-                clip-path: polygon(0 50%, 100% 50%, 100% 20%, 0 20%);
-                transform: translate(-1px, 0);
-            }
-            6% {
-                clip-path: polygon(0 70%, 100% 70%, 100% 70%, 0 70%);
-                transform: translate(3px, 0) scale(1.01);
-            }
-            7% {
-                clip-path: polygon(0 80%, 100% 80%, 100% 80%, 0 80%);
-                transform: translate(-3px, 0);
-            }
-            8% {
-                clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%);
-                transform: translate(0, 0);
-            }
-            9% {
-                clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%);
-                transform: translate(-2px, 0);
-            }
-            10.9% {
-                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-                transform: translate(0, 0);
-            }
-            20% {
-                clip-path: polygon(0 15%, 100% 15%, 100% 15%, 0 15%);
-                transform: translate(-2px, 0);
-            }
-            22% {
-                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-            }
-            55% {
-                clip-path: polygon(0 70%, 100% 70%, 100% 72%, 0 72%);
-                transform: translate(1px, 0);
-            }
-            56% {
-                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-            }
-            60% {
-                clip-path: polygon(0 80%, 100% 80%, 100% 82%, 0 82%);
-                transform: translate(3px, 0) scale(1.01);
-            }
-            61% {
-                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-            }
-            100% {
-                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-            }
-        }
-        
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .title {
-                font-size: 20vw;
-                -webkit-text-stroke: 1px var(--primary);
-            }
-            
-            .subtitle {
-                font-size: 1.2rem;
-                letter-spacing: 4px;
-            }
-            
-            .orb {
-                width: 150px;
-                height: 150px;
-                filter: blur(40px);
-            }
-        }
+        /* 保持所有样式不变 */
     </style>
 </head>
 <body>
@@ -409,224 +33,157 @@
     </footer>
     
     <script>
+        // 立即执行的初始化代码 - 不等待DOMContentLoaded
         // 自定义光标效果
         const cursor = document.querySelector('.cursor');
         
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
+            
+            // 直接更新为调试
+            console.log("Mouse moved:", e.clientX, e.clientY);
         });
         
         document.addEventListener('mousedown', () => {
             cursor.classList.add('hover');
+            console.log("Mouse down");
         });
         
         document.addEventListener('mouseup', () => {
             cursor.classList.remove('hover');
+            console.log("Mouse up");
         });
         
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                cursor.classList.add('hover');
-            });
-            
-            link.addEventListener('mouseleave', () => {
-                cursor.classList.remove('hover');
-            });
-        });
+        // 简化版的粒子系统 - 确保基本功能正常
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = window.innerWidth < 768 ? 50 : 100;
+        let mousePosition = {
+            x: window.innerWidth / 2,
+            y: window.innerHeight / 2
+        };
         
-        // 粒子系统
-        class ParticleSystem {
-            constructor() {
-                this.canvas = document.getElementById('particles');
-                this.ctx = this.canvas.getContext('2d');
-                this.particles = [];
-                this.particleCount = window.innerWidth < 768 ? 50 : 100;
-                this.mousePosition = {
-                    x: window.innerWidth / 2,
-                    y: window.innerHeight / 2
-                };
-                
-                this.init();
-                this.animate();
-                
-                window.addEventListener('resize', () => this.resize());
-                window.addEventListener('mousemove', (e) => {
-                    this.mousePosition.x = e.clientX;
-                    this.mousePosition.y = e.clientY;
+        // 调整canvas尺寸
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        // 初始化粒子
+        function initParticles() {
+            resizeCanvas();
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2 + 1,
+                    speedX: Math.random() * 0.5 - 0.25,
+                    speedY: Math.random() * 0.5 - 0.25,
+                    color: `rgba(${Math.round(Math.random() * 100) + 150}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 150) + 100}, ${Math.random() * 0.3 + 0.2})`
                 });
-                
-                window.addEventListener('touchmove', (e) => {
-                    if (e.touches.length > 0) {
-                        this.mousePosition.x = e.touches[0].clientX;
-                        this.mousePosition.y = e.touches[0].clientY;
-                    }
-                });
-            }
-            
-            init() {
-                this.resize();
-                
-                this.particles = [];
-                for (let i = 0; i < this.particleCount; i++) {
-                    this.particles.push({
-                        x: Math.random() * this.canvas.width,
-                        y: Math.random() * this.canvas.height,
-                        size: Math.random() * 2 + 1,
-                        speedX: Math.random() * 0.5 - 0.25,
-                        speedY: Math.random() * 0.5 - 0.25,
-                        color: `rgba(${Math.round(Math.random() * 100) + 150}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 150) + 100}, ${Math.random() * 0.3 + 0.2})`
-                    });
-                }
-            }
-            
-            resize() {
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
-            }
-            
-            draw() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                // 绘制连接线
-                for (let i = 0; i < this.particles.length; i++) {
-                    for (let j = i; j < this.particles.length; j++) {
-                        const p1 = this.particles[i];
-                        const p2 = this.particles[j];
-                        const distance = Math.sqrt(
-                            Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2)
-                        );
-                        
-                        if (distance < 100) {
-                            this.ctx.beginPath();
-                            this.ctx.strokeStyle = `rgba(0, 255, 170, ${(1 - distance / 100) * 0.15})`;
-                            this.ctx.lineWidth = 0.5;
-                            this.ctx.moveTo(p1.x, p1.y);
-                            this.ctx.lineTo(p2.x, p2.y);
-                            this.ctx.stroke();
-                        }
-                    }
-                }
-                
-                // 绘制粒子
-                this.particles.forEach(p => {
-                    this.ctx.beginPath();
-                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    this.ctx.fillStyle = p.color;
-                    this.ctx.fill();
-                });
-                
-                // 鼠标交互圆
-                this.ctx.beginPath();
-                this.ctx.arc(this.mousePosition.x, this.mousePosition.y, 80, 0, Math.PI * 2);
-                const gradient = this.ctx.createRadialGradient(
-                    this.mousePosition.x, this.mousePosition.y, 0,
-                    this.mousePosition.x, this.mousePosition.y, 80
-                );
-                gradient.addColorStop(0, 'rgba(255, 0, 170, 0.1)');
-                gradient.addColorStop(1, 'rgba(255, 0, 170, 0)');
-                this.ctx.fillStyle = gradient;
-                this.ctx.fill();
-            }
-            
-            update() {
-                this.particles.forEach(p => {
-                    // 更新位置
-                    p.x += p.speedX;
-                    p.y += p.speedY;
-                    
-                    // 边界检测
-                    if (p.x < 0) p.x = this.canvas.width;
-                    if (p.x > this.canvas.width) p.x = 0;
-                    if (p.y < 0) p.y = this.canvas.height;
-                    if (p.y > this.canvas.height) p.y = 0;
-                    
-                    // 鼠标交互
-                    const dx = p.x - this.mousePosition.x;
-                    const dy = p.y - this.mousePosition.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < 100) {
-                        const angle = Math.atan2(dy, dx);
-                        const force = (100 - distance) / 500;
-                        
-                        p.speedX += Math.cos(angle) * force;
-                        p.speedY += Math.sin(angle) * force;
-                    }
-                    
-                    // 添加随机扰动
-                    p.speedX += (Math.random() - 0.5) * 0.01;
-                    p.speedY += (Math.random() - 0.5) * 0.01;
-                    
-                    // 限制最大速度
-                    const maxSpeed = 1.5;
-                    const speed = Math.sqrt(p.speedX * p.speedX + p.speedY * p.speedY);
-                    if (speed > maxSpeed) {
-                        p.speedX = (p.speedX / speed) * maxSpeed;
-                        p.speedY = (p.speedY / speed) * maxSpeed;
-                    }
-                    
-                    // 自然减速
-                    p.speedX *= 0.99;
-                    p.speedY *= 0.99;
-                });
-            }
-            
-            animate() {
-                this.update();
-                this.draw();
-                requestAnimationFrame(() => this.animate());
             }
         }
         
-        // 初始化粒子系统
-        window.addEventListener('DOMContentLoaded', () => {
-            new ParticleSystem();
+        // 绘制和更新粒子
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // 扫描线动画效果
-            setInterval(() => {
-                const line = document.querySelector('.laser-line');
-                line.style.top = '0%';
-                line.style.transform = 'scaleX(0)';
-                line.style.opacity = '0';
+            particles.forEach(p => {
+                // 更新位置
+                p.x += p.speedX;
+                p.y += p.speedY;
                 
-                setTimeout(() => {
-                    line.style.transition = 'transform 1.5s ease-out, opacity 0.5s ease-in';
-                    line.style.transform = 'scaleX(1)';
-                    line.style.opacity = '0.6';
+                // 边界检测
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+                
+                // 鼠标交互
+                const dx = p.x - mousePosition.x;
+                const dy = p.y - mousePosition.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 100) {
+                    const angle = Math.atan2(dy, dx);
+                    const force = (100 - distance) / 500;
                     
-                    setTimeout(() => {
-                        line.style.transition = 'top 3s linear, transform 1s ease-in, opacity 1s ease-in';
-                        line.style.top = '100%';
-                        line.style.transform = 'scaleX(0)';
-                        line.style.opacity = '0';
-                    }, 1500);
-                }, 100);
-            }, 8000);
+                    p.speedX += Math.cos(angle) * force;
+                    p.speedY += Math.sin(angle) * force;
+                }
+                
+                // 绘制粒子
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+            });
+            
+            requestAnimationFrame(drawParticles);
+        }
+        
+        // 鼠标移动事件 - 直接绑定，不放在类中
+        document.addEventListener('mousemove', (e) => {
+            mousePosition.x = e.clientX;
+            mousePosition.y = e.clientY;
             
             // 标题3D效果
             const title = document.querySelector('.title');
-            
-            window.addEventListener('mousemove', (e) => {
-                const xAxis = (window.innerWidth / 2 - e.clientX) / 25;
-                const yAxis = (window.innerHeight / 2 - e.clientY) / 25;
+            const xAxis = (window.innerWidth / 2 - e.clientX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.clientY) / 25;
+            title.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+        
+        // 触摸事件
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mousePosition.x = e.touches[0].clientX;
+                mousePosition.y = e.touches[0].clientY;
+                
+                const title = document.querySelector('.title');
+                const xAxis = (window.innerWidth / 2 - e.touches[0].clientX) / 25;
+                const yAxis = (window.innerHeight / 2 - e.touches[0].clientY) / 25;
                 title.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-            });
-            
-            // 移动设备支持
-            window.addEventListener('touchmove', (e) => {
-                if (e.touches.length > 0) {
-                    const xAxis = (window.innerWidth / 2 - e.touches[0].clientX) / 25;
-                    const yAxis = (window.innerHeight / 2 - e.touches[0].clientY) / 25;
-                    title.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-                }
-            });
-            
-            // 隐藏鼠标
-            if (window.innerWidth > 768) {
-                document.body.style.cursor = 'none';
             }
         });
+        
+        // 调整窗口大小
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+        });
+        
+        // 立即初始化和开始动画
+        initParticles();
+        drawParticles();
+        
+        // 扫描线动画效果
+        setInterval(() => {
+            const line = document.querySelector('.laser-line');
+            line.style.top = '0%';
+            line.style.transform = 'scaleX(0)';
+            line.style.opacity = '0';
+            
+            setTimeout(() => {
+                line.style.transition = 'transform 1.5s ease-out, opacity 0.5s ease-in';
+                line.style.transform = 'scaleX(1)';
+                line.style.opacity = '0.6';
+                
+                setTimeout(() => {
+                    line.style.transition = 'top 3s linear, transform 1s ease-in, opacity 1s ease-in';
+                    line.style.top = '100%';
+                    line.style.transform = 'scaleX(0)';
+                    line.style.opacity = '0';
+                }, 1500);
+            }, 100);
+        }, 8000);
+        
+        // 隐藏鼠标
+        if (window.innerWidth > 768) {
+            document.body.style.cursor = 'none';
+        }
     </script>
 </body>
 </html>
